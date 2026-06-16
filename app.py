@@ -4,6 +4,7 @@ import re
 import unicodedata
 from collections import defaultdict
 from io import BytesIO
+import gdown
 
 import folium
 import pandas as pd
@@ -74,15 +75,19 @@ def first_existing_column(columns, candidates):
 # ==================================================
 # LOAD GEOJSON
 # ==================================================
+
 @st.cache_data
 def load_geojson():
-    with open(
-        "VietnamWardBoundary2025.geojson",
-        encoding="utf-8"
-    ) as f:
+    file_id = "1X8Njp2oP1yy1xxdtEWVQURXfmxslhapj"
+
+    url = f"https://drive.google.com/uc?id={file_id}"
+
+    output = "temp.geojson"
+    gdown.download(url, output, quiet=False)
+
+    with open(output, "r", encoding="utf-8") as f:
         return json.load(f)
-
-
+    
 @st.cache_data
 def build_indexes():
     geo = load_geojson()
