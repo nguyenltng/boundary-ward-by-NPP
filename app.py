@@ -4,7 +4,7 @@ import re
 import unicodedata
 from collections import defaultdict
 from io import BytesIO
-import gdown
+import zipfile
 
 import folium
 import pandas as pd
@@ -76,18 +76,20 @@ def first_existing_column(columns, candidates):
 # LOAD GEOJSON
 # ==================================================
 
+
 @st.cache_data
 def load_geojson():
-    file_id = "1X8Njp2oP1yy1xxdtEWVQURXfmxslhapj"
+    zip_path = "VietnamWardBoundary2025.geojson.zip"
 
-    url = f"https://drive.google.com/uc?id={file_id}"
+    with zipfile.ZipFile(zip_path, "r") as z:
+        geojson_file = next(
+            name for name in z.namelist()
+            if name.endswith(".geojson")
+        )
 
-    output = "temp.geojson"
-    gdown.download(url, output, quiet=False)
-
-    with open(output, "r", encoding="utf-8") as f:
-        return json.load(f)
-    
+        with z.open(geojson_file) as f:
+            return json.load(f)
+        
 @st.cache_data
 def build_indexes():
     geo = load_geojson()
