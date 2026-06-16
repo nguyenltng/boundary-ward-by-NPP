@@ -82,10 +82,16 @@ def load_geojson():
     zip_path = "VietnamWardBoundary2025.geojson.zip"
 
     with zipfile.ZipFile(zip_path, "r") as z:
-        geojson_file = next(
-            name for name in z.namelist()
-            if name.endswith(".geojson")
-        )
+        names = z.namelist()
+
+        geojson_file = None
+        for n in names:
+            if n.lower().endswith(".geojson"):
+                geojson_file = n
+                break
+
+        if not geojson_file:
+            raise ValueError(f"Không tìm thấy geojson trong zip: {names}")
 
         with z.open(geojson_file) as f:
             return json.load(f)
@@ -490,9 +496,9 @@ with col1:
     for ward in ward_names_sorted:
         st.caption(f"• {ward}")
 
-# with col2:
-#     st_folium(
-#         m,
-#         height=600,
-#         width=None,
-#     )
+with col2:
+    st_folium(
+        m,
+        height=600,
+        width=None,
+    )
