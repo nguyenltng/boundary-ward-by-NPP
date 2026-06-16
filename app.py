@@ -490,9 +490,9 @@ with col1:
     for ward in ward_names_sorted:
         st.caption(f"• {ward}")
 
-with col2:
-    st_folium(
-        m,
-        height=600,
-        width=None,
-    )
+# with col2:
+#     st_folium(
+#         m,
+#         height=600,
+#         width=None,
+#     )
